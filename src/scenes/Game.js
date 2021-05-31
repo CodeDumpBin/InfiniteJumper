@@ -12,6 +12,7 @@ export default class Game extends Phaser.Scene {
   bunnySpeed = -400;
   carrotsCollectedText;
   latestPlatform;
+  swipe
 
   grounds = ['ground_snow', 'ground_grass', 'ground_sand', 'ground_wood', 'ground_cake'];
   constructor() {
@@ -21,19 +22,7 @@ export default class Game extends Phaser.Scene {
     this.carrotsCollected = 0
   }
   preload() {
-    this.load.image('background', 'assets/PNG/Background/bg_layer1.png')
-    for (let g = 0; g < this.grounds.length; g++) {
-      this.load.image(this.grounds[g], 'assets/PNG/Environment/' + this.grounds[g] + ".png")
-    }
-    this.load.image('bunny-jump', 'assets/PNG/Players/bunny1_jump.png')
-    this.load.audio('jump', 'assets/phaseJump1.ogg')
-    this.load.audio('coin-collected', 'assets/coin.wav')
-    this.load.image('bunny-stand', 'assets/PNG/Players/bunny1_stand.png')
-    this.load.image('carrot', 'assets/PNG/Items/carrot.png')
-    this.load.image('enemy', 'assets/PNG/Enemies/spikeMan_stand.png')
-    this.load.image('enemy-stuck', 'assets/PNG/Enemies/spikeMan_walk1.png')
-    this.load.image('bunny-hurt', 'assets/PNG/Players/bunny1_hurt.png')
-    this.load.audio('hit', 'assets/hit.wav')
+
 
     this.cursor = this.input.keyboard.createCursorKeys()
 
@@ -69,6 +58,28 @@ export default class Game extends Phaser.Scene {
     this.physics.add.collider(this.player, this.carrots, this.handleCollectCarrot, undefined, this)
     this.physics.add.collider(this.player, this.enemies, this.handleEnemy, undefined, this)
     this.carrotsCollectedText = this.add.text(240, 10, 'Carrots : 0', { color: '#000', fontSize: 24 }).setScrollFactor(0).setOrigin(0.5, 0)
+
+    this.swipe = this.plugins.get('Phaser3Swipe');
+    // this.swipe.load(this);
+
+    this.events.on("swipe", (e) => {
+      if (e.right) {
+        console.log("Hacer algo a la derecha");
+        this.player.setVelocityX(200)
+      }
+      else if (e.left) {
+        console.log("Hacer algo a la izquierda");
+        this.player.setVelocityX(-200)
+
+      }
+      // else if (e.up) {
+      //   console.log("Hacer algo a la arriba");
+      // }
+      // else if (e.down) {
+      //   console.log("Hacer algo a la abajo");
+      // }
+    })
+
 
   }
   update(t, dt) {
