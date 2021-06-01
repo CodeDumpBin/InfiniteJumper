@@ -12,7 +12,17 @@ export default class Game extends Phaser.Scene {
   bunnySpeed = -400;
   carrotsCollectedText;
   latestPlatform;
-  swipe
+  distX;
+  upX;
+  distY;
+  upY;
+  dist;
+  pi;
+  moveThreshold = 25;
+  swipe;
+  isClicking = false;
+  swipeDirection;
+
 
   grounds = ['ground_snow', 'ground_grass', 'ground_sand', 'ground_wood', 'ground_cake'];
   constructor() {
@@ -22,10 +32,7 @@ export default class Game extends Phaser.Scene {
     this.carrotsCollected = 0
   }
   preload() {
-
-
     this.cursor = this.input.keyboard.createCursorKeys()
-
   }
   create() {
     this.add.image(240, 320, 'background').setScrollFactor(1, 0)
@@ -59,28 +66,6 @@ export default class Game extends Phaser.Scene {
     this.physics.add.collider(this.player, this.enemies, this.handleEnemy, undefined, this)
     this.carrotsCollectedText = this.add.text(240, 10, 'Carrots : 0', { color: '#000', fontSize: 24 }).setScrollFactor(0).setOrigin(0.5, 0)
 
-    this.swipe = this.plugins.get('Phaser3Swipe');
-    // this.swipe.load(this);
-
-    this.events.on("swipe", (e) => {
-      if (e.right) {
-        console.log("Hacer algo a la derecha");
-        this.player.setVelocityX(200)
-      }
-      else if (e.left) {
-        console.log("Hacer algo a la izquierda");
-        this.player.setVelocityX(-200)
-
-      }
-      // else if (e.up) {
-      //   console.log("Hacer algo a la arriba");
-      // }
-      // else if (e.down) {
-      //   console.log("Hacer algo a la abajo");
-      // }
-    })
-
-
   }
   update(t, dt) {
 
@@ -92,16 +77,20 @@ export default class Game extends Phaser.Scene {
         platform.body.updateFromGameObject()
         this.latestPlatform = platform;
         this.addCarrotAbove(platform)
+        if (t % 7000) {
+          console.log(t)
+          console.log("..enemy added")
+          this.addEnemiesAbove(platform)
+
+        }
+
       }
     })
-    if (dt > 17 && this.latestPlatform) {
-      this.addEnemiesAbove(this.latestPlatform)
-    }
+
 
     const touchingDown = this.player.body.touching.down
 
     if (touchingDown) {
-
       this.player.setVelocityY(this.bunnySpeed)
       this.sound.play('jump');
       this.player.setTexture('bunny-jump')
@@ -111,7 +100,25 @@ export default class Game extends Phaser.Scene {
     }
     else if (this.cursor.right.isDown && !touchingDown) {
       this.player.setVelocityX(200)
-    } else {
+    }
+
+    else if (!this.input.activePointer.isDown && !touchingDown) {
+      // console.log('...input point distance', this.input.activePointer.downX - this.input.activePointer.upX, ' input pointer duration..', this.input.activePointer.upTime - this.input.activePointer.downTime)
+      let _d = Math.abs(this.input.activePointer.downX - this.input.activePointer.upX);
+      let _t = (this.input.activePointer.upTime - this.input.activePointer.downTime) / 10
+      let calculateVelocity = _d / _t;
+      let velocityFactor = calculateVelocity && calculateVelocity > 1 ? calculateVelocity : 1;
+      if (this.input.activePointer.downX > this.input.activePointer.upX) {
+        //  swipe left
+        this.player.setVelocityX(-100 * velocityFactor)
+      } else if (this.input.activePointer.downX < this.input.activePointer.upX) {
+        //  swipe right
+        this.player.setVelocityX(100 * velocityFactor)
+      } else {
+        this.player.setVelocityX(0)
+      }
+    }
+    else {
       this.player.setVelocityX(0)
     }
     this.horizontalWrap(this.player)
@@ -123,7 +130,12 @@ export default class Game extends Phaser.Scene {
     const vy = this.player.body.velocity.y
     if (vy > 0 && this.player.texture.key !== 'bunny-stand') {
       this.player.setTexture('bunny-stand')
+      this.player.setVelocityX(0)
     }
+
+
+
+
 
   }
 
@@ -150,7 +162,8 @@ export default class Game extends Phaser.Scene {
 
   addEnemiesAbove(sprite) {
     const y = sprite.y - sprite.displayHeight
-    const enemy = this.enemies.get(sprite.x, y, 'enemy')
+
+    const enemy = this.enemies.get(sprite.x + (Math.random() * 100), y, 'enemy')
     enemy.setActive(true)
     enemy.setVisible(true)
     this.add.existing(enemy)

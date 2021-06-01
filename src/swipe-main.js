@@ -1,7 +1,7 @@
 import Phaser from "./phaser.js"
-import Start from "./scenes/Start.js"
-import Game from "./scenes/Game.js"
-import GameOver from "./scenes/GameOver.js"
+import Start from "./scenes/SwipeStart.js"
+// import Phaser3Swipe from "./swipe.js"
+// console.log('LLLLLLLLLLLLLLLLLLLL',Phaser3Swipe)
 export default new Phaser.Game({
   type: Phaser.AUTO,
   width: 480,
@@ -11,7 +11,7 @@ export default new Phaser.Game({
     default: 'arcade',
     arcade: {
       gravity: { y: 200 },
-      debug: false
+      debug: true
     }
   },
   input: {
