@@ -1,6 +1,8 @@
 import Phaser from "../phaser.js"
 import Carrot from "../game/Carrot.js"
 import Enemy from "../game/Enemy.js"
+import Constants from "../constants.js"
+
 
 export default class Game extends Phaser.Scene {
   player
@@ -35,6 +37,9 @@ export default class Game extends Phaser.Scene {
     this.cursor = this.input.keyboard.createCursorKeys()
   }
   create() {
+    // width: WIDTH * DEVICE_PIXEL_RATIO,
+    // height: HEIGHT * DEVICE_PIXEL_RATIO,
+
     this.add.image(240, 320, 'background').setScrollFactor(1, 0)
     this.platforms = this.physics.add.staticGroup()
     const max = 8;

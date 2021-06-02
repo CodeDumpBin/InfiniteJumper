@@ -1,4 +1,5 @@
 import Phaser from "../phaser.js"
+import Constants from "../constants.js"
 
 export default class Start extends Phaser.Scene {
   platform
@@ -22,16 +23,14 @@ export default class Start extends Phaser.Scene {
     this.load.image('enemy-stuck', 'assets/PNG/Enemies/spikeMan_walk1.png')
     this.load.image('bunny-hurt', 'assets/PNG/Players/bunny1_hurt.png')
     this.load.audio('hit', 'assets/hit.wav')
-    this.load.plugin("Phaser3Swipe", Phaser3Swipe, true);
-
-
-
   }
   create() {
-    this.add.image(0, 0, 'background')
-    this.platform = this.physics.add.staticImage(this.scale.width / 2, (this.scale.height / 2) + 100, 'ground_grass')
-    this.add.text((this.scale.width / 2) - 100, (this.scale.height / 2) + 100, 'Infinite Jumper', { fontSize: 20, color: "#FFFF00" })
-    this.player = this.physics.add.image(this.scale.width / 2, (this.scale.height / 2) - 140, 'bunny-stand')
+    this.add.image(400, 500, 'background').setScrollFactor(1, 0)
+    this.platform = this.physics.add.staticImage(Constants.WIDTH / 2, (Constants.HEIGHT / 2) + 100, 'ground_grass')
+    // this.platform = this.physics.add.staticImage(this.scale.width / 2, (this.scale.height / 2) + 100, 'ground_grass')
+    this.add.text((this.scale.width / 2) - 100, 10, 'Infinite Jumper', { fontSize: 20, color: "#FFFF00" })
+    this.add.text((this.scale.width / 2) - 100, (this.scale.height / 2) + 200, 'Click to play' + Constants.HEIGHT, { fontSize: 20, color: "#FFFF00" })
+    this.player = this.physics.add.image(Constants.WIDTH / 2, (Constants.HEIGHT / 2) - 200, 'bunny-stand')
     this.physics.add.collider(this.platform, this.player)
 
   }
