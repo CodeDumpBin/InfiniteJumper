@@ -6,8 +6,10 @@ import Constants from "./constants.js"
 
 export default new Phaser.Game({
   type: Phaser.AUTO,
-  width: Constants.WIDTH * Constants.DEVICE_PIXEL_RATIO,
-  height: Constants.HEIGHT * Constants.DEVICE_PIXEL_RATIO,
+  width: Constants.WIDTH,
+  //  * Constants.DEVICE_PIXEL_RATIO,
+  height: Constants.HEIGHT,
+  //  * Constants.DEVICE_PIXEL_RATIO,
   scene: [Start, Game, GameOver],
   physics: {
     default: 'arcade',

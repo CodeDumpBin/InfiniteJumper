@@ -24,6 +24,7 @@ export default class Game extends Phaser.Scene {
   swipe;
   isClicking = false;
   swipeDirection;
+  platformVerticalDistance = [0, Constants.WIDTH]
 
 
   grounds = ['ground_snow', 'ground_grass', 'ground_sand', 'ground_wood', 'ground_cake'];
@@ -45,16 +46,17 @@ export default class Game extends Phaser.Scene {
     const max = 8;
     const min = 2;
     for (let i = 0; i < 5; ++i) {
-      const x = Phaser.Math.Between(80, 400)
+      const x = Phaser.Math.Between(...this.platformVerticalDistance)
       const y = 150 * i;
       const platform = this.platforms.create(x, y, this.grounds[Math.floor(Math.random() * this.grounds.length)])
-      platform.scale =
-        Math.floor(Math.random() * (max - min + 1) + min) / 10;
+      platform.scale = 0.5;
+      // =
+      //   Math.floor(Math.random() * (max - min + 1) + min) / 10;
       const body = platform.body;
       body.updateFromGameObject();
     }
 
-    this.player = this.physics.add.sprite(240, 320, 'bunny-stand').setScale(0.5)
+    this.player = this.physics.add.sprite(240, 320, 'bunny-stand').setScale(0.3)
     this.physics.add.collider(this.platforms, this.player)
     this.player.body.checkCollision.up = false
     this.player.body.checkCollision.left = false
@@ -83,8 +85,8 @@ export default class Game extends Phaser.Scene {
         this.latestPlatform = platform;
         this.addCarrotAbove(platform)
         if (t % 7000) {
-          console.log(t)
-          console.log("..enemy added")
+          // console.log(t)
+          // console.log("..enemy added")
           this.addEnemiesAbove(platform)
 
         }
@@ -167,8 +169,8 @@ export default class Game extends Phaser.Scene {
 
   addEnemiesAbove(sprite) {
     const y = sprite.y - sprite.displayHeight
-
     const enemy = this.enemies.get(sprite.x + (Math.random() * 100), y, 'enemy')
+    enemy.scale = 0.3
     enemy.setActive(true)
     enemy.setVisible(true)
     this.add.existing(enemy)
@@ -184,7 +186,7 @@ export default class Game extends Phaser.Scene {
     this.sound.play('coin-collected')
     this.carrotsCollectedText.text = 'Carrots : ' + this.carrotsCollected
     if (this.carrotsCollected % 20 === 0 && this.bunnySpeed > -2000) {
-      console.log('...bunny speed...', this.bunnySpeed)
+      // console.log('...bunny speed...', this.bunnySpeed)
       this.bunnySpeed = this.bunnySpeed - 200
     }
 

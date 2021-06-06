@@ -5,6 +5,12 @@ export default class Start extends Phaser.Scene {
   platform
   player
   grounds = ['ground_snow', 'ground_grass', 'ground_sand', 'ground_wood', 'ground_cake'];
+  textProperty = {
+    fontSize: 20, color: "#0c0c36", fontWeight: 'bold', stroke: '#4e8572',
+    strokeThickness: 6,
+    fill: '#43d637',
+  };
+
   constructor() {
     super("start")
   }
@@ -28,8 +34,8 @@ export default class Start extends Phaser.Scene {
     this.add.image(400, 500, 'background').setScrollFactor(1, 0)
     this.platform = this.physics.add.staticImage(Constants.WIDTH / 2, (Constants.HEIGHT / 2) + 100, 'ground_grass')
     // this.platform = this.physics.add.staticImage(this.scale.width / 2, (this.scale.height / 2) + 100, 'ground_grass')
-    this.add.text((this.scale.width / 2) - 100, 10, 'Infinite Jumper', { fontSize: 20, color: "#FFFF00" })
-    this.add.text((this.scale.width / 2) - 100, (this.scale.height / 2) + 200, 'Click to play' + Constants.HEIGHT, { fontSize: 20, color: "#FFFF00" })
+    this.add.text((this.scale.width / 2) - 100, 10, 'Infinite Jumper', this.textProperty)
+    this.add.text((this.scale.width / 2) - 100, (this.scale.height / 2) + 200, 'Click to Play', this.textProperty)
     this.player = this.physics.add.image(Constants.WIDTH / 2, (Constants.HEIGHT / 2) - 200, 'bunny-stand')
     this.physics.add.collider(this.platform, this.player)
 
